@@ -33,6 +33,41 @@
       "homepage": "https://github.com/fawazahmed0/exchange-api"
     },
     {
+      "id": "momentum-mcp",
+      "name": "mphinance/momentum-mcp",
+      "category": "indicators",
+      "type": "mcp",
+      "install": "git clone https://github.com/mphinance/momentum-mcp && cd momentum-mcp && pip install -r requirements.txt",
+      "auth": "none",
+      "coverage": "yfinance-backed: get_historical_data, analyze_technicals (RSI/MACD/SMA/EMA), generate_chart (candlestick PNG), fetch_ticker_news, extract_article. Works for FX via `EURUSD=X` ticker convention.",
+      "use_when": "Conversational TA lookups and quick chart generation. Good fallback when pandas-ta + plotting feels heavy. Ignore the screen/news tools — equity-biased.",
+      "homepage": "https://github.com/mphinance/momentum-mcp"
+    },
+    {
+      "id": "fred-mcp",
+      "name": "stefanoamorelli/fred-mcp-server",
+      "category": "data-macro",
+      "type": "mcp",
+      "install": "npx -y @smithery/cli install @stefanoamorelli/fred-mcp-server --client claude  # or docker",
+      "auth": "api-key",
+      "env_var": "FRED_API_KEY",
+      "coverage": "Tools: fred_browse, fred_search, fred_get_series (with transformations pch/pc1/log + frequency aggregation).",
+      "use_when": "Conversational FRED lookups — browse/search the catalog, fetch a single series with built-in transformations. Use alongside pandas-datareader (`fred` id): MCP for discovery, pandas for bulk merging and quant.",
+      "homepage": "https://github.com/stefanoamorelli/fred-mcp-server"
+    },
+    {
+      "id": "langalpha-macro-server",
+      "name": "LangAlpha macro_mcp_server (lift candidate)",
+      "category": "data-macro",
+      "type": "lift-candidate",
+      "source_path": "mcp_servers/macro_mcp_server.py (in LangAlpha repo)",
+      "auth": "api-key (FMP)",
+      "env_var": "FMP_API_KEY",
+      "coverage": "Treasury yield curve, Fed funds, CPI, economic calendar. FastMCP single-file server, standalone from LangAlpha's runtime (no Daytona/Postgres/Redis). Direct FX rate-differential utility.",
+      "use_when": "If FRED + pandas-datareader feels insufficient for real-time Treasury/Fed data. Lift the file, swap data_client.fmp for direct FMP HTTP calls, run as a local MCP.",
+      "homepage": "https://github.com/ginlix-ai/LangAlpha/blob/main/mcp_servers/macro_mcp_server.py"
+    },
+    {
       "id": "tradingview-mcp",
       "name": "tradesdontlie/tradingview-mcp",
       "category": "data-pro",
