@@ -19,6 +19,8 @@ The canonical tool manifest is `toolkit.json` at the repo root. Read it at the s
 
 Tools are grouped by category: data-spot, data-pro, data-macro, data-news-geopol, indicators, cointegration, vol, forecast, derivatives, quant-metrics, backtest, visualization, reporting, search, architecture-reference.
 
+Chart-anchored workflows can use `tradingview-mcp` (requires TradingView Desktop) for OHLCV, indicator values, annotated screenshots, Pine Script, and replay-mode backtesting.
+
 When you use a tool, cite its `id` from `toolkit.json` in findings / reports.
 
 ## Commands

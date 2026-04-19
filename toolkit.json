@@ -33,6 +33,17 @@
       "homepage": "https://github.com/fawazahmed0/exchange-api"
     },
     {
+      "id": "tradingview-mcp",
+      "name": "tradesdontlie/tradingview-mcp",
+      "category": "data-pro",
+      "type": "mcp",
+      "install": "git clone https://github.com/tradesdontlie/tradingview-mcp && cd tradingview-mcp && npm install && node src/server.js",
+      "auth": "TradingView Desktop subscription; launch app with --remote-debugging-port=9222",
+      "coverage": "Any symbol TradingView supports — FX pairs included if plan allows. OHLCV via data_get_ohlcv, bar-by-bar replay, chart screenshots, drawing tools, indicator values, Pine Script dev, alerts.",
+      "use_when": "User has TradingView Desktop and wants chart-anchored analysis — pulling indicator values, annotated screenshots, Pine Script prototyping, or replay-mode backtesting. Preferred for visual/chart workflows over headless fetching.",
+      "homepage": "https://github.com/tradesdontlie/tradingview-mcp"
+    },
+    {
       "id": "yfinance",
       "name": "yfinance",
       "category": "data-spot",
