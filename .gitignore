@@ -1,0 +1,15 @@
+/private/
+.env
+.env.*
+.mcp.json
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+venv/
+data/*/
+!data/.gitkeep
+charts/*/
+!charts/.gitkeep
+reports/*.pdf
+reports/.build/

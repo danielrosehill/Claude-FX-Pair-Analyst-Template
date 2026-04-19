@@ -1,0 +1,314 @@
+{
+  "$schema": "./toolkit.schema.json",
+  "version": "0.1.0",
+  "description": "Canonical tool manifest for the FX Pair Analyst template. Skills and commands reference entries by id. Install-on-demand — the agent should install only what a given task requires, not the entire toolkit up-front.",
+  "categories": {
+    "data-spot": "Spot/historical FX rate data",
+    "data-pro": "Broker-grade FX data (intraday, tick, OHLCV)",
+    "data-macro": "Macroeconomic & rate-differential data",
+    "data-news-geopol": "News and geopolitical context",
+    "indicators": "Technical indicators",
+    "cointegration": "Pair trading / cointegration / stationarity",
+    "vol": "Volatility modeling",
+    "forecast": "Time-series forecasting",
+    "derivatives": "FX options / forwards / swaps pricing",
+    "quant-metrics": "Risk & performance metrics",
+    "backtest": "Backtesting engines",
+    "visualization": "Charting",
+    "reporting": "Document generation",
+    "search": "Web search / research",
+    "architecture-reference": "Patterns borrowed, not integrated as deps"
+  },
+  "tools": [
+    {
+      "id": "fawazahmed-exchange-api",
+      "name": "fawazahmed0/exchange-api",
+      "category": "data-spot",
+      "type": "http-api",
+      "auth": "none",
+      "endpoint": "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/{base}.json",
+      "historical_endpoint": "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@{YYYY-MM-DD}/v1/currencies/{base}.json",
+      "coverage": "200+ fiat + crypto + metals, daily, ~several years history",
+      "use_when": "Default free historical spot rates. First choice for daily close series.",
+      "homepage": "https://github.com/fawazahmed0/exchange-api"
+    },
+    {
+      "id": "yfinance",
+      "name": "yfinance",
+      "category": "data-spot",
+      "type": "pip",
+      "install": "pip install yfinance",
+      "auth": "none",
+      "coverage": "FX pairs via `EURUSD=X` ticker, daily + intraday (limited history)",
+      "use_when": "Fallback when fawazahmed lacks a cross, or when OHLC (not just close) is needed.",
+      "homepage": "https://github.com/ranaroussi/yfinance"
+    },
+    {
+      "id": "alpha-vantage",
+      "name": "alpha_vantage",
+      "category": "data-spot",
+      "type": "pip",
+      "install": "pip install alpha_vantage",
+      "auth": "api-key",
+      "env_var": "ALPHAVANTAGE_API_KEY",
+      "coverage": "FX intraday + daily, ~20y daily history",
+      "rate_limit": "25 req/day free",
+      "use_when": "Need intraday bars on free tier.",
+      "homepage": "https://www.alphavantage.co/"
+    },
+    {
+      "id": "oanda-v20",
+      "name": "oandapyV20",
+      "category": "data-pro",
+      "type": "pip",
+      "install": "pip install oandapyV20",
+      "auth": "api-key + account-id",
+      "env_var": "OANDA_API_TOKEN, OANDA_ACCOUNT_ID",
+      "coverage": "Broker-grade FX bars/ticks, minute-level historical, live streams",
+      "use_when": "User has an OANDA account and wants intraday/tick rigor.",
+      "homepage": "https://developer.oanda.com/rest-live-v20/introduction/"
+    },
+    {
+      "id": "fred",
+      "name": "pandas-datareader (FRED)",
+      "category": "data-macro",
+      "type": "pip",
+      "install": "pip install pandas-datareader",
+      "auth": "optional-key (FRED_API_KEY improves rate limits)",
+      "env_var": "FRED_API_KEY",
+      "coverage": "Macro series: DXY, policy rates, inflation, rate differentials, yields",
+      "use_when": "Always load macro context alongside spot — rate differentials drive majors.",
+      "homepage": "https://fred.stlouisfed.org/"
+    },
+    {
+      "id": "tavily",
+      "name": "Tavily MCP",
+      "category": "search",
+      "type": "mcp",
+      "auth": "api-key (already configured in user environment)",
+      "use_when": "Quick news / background lookups. Use for factual retrieval; pair with Perplexity for synthesis.",
+      "homepage": "https://tavily.com/"
+    },
+    {
+      "id": "perplexity",
+      "name": "Perplexity",
+      "category": "data-news-geopol",
+      "type": "http-api",
+      "auth": "api-key",
+      "env_var": "PERPLEXITY_API_KEY",
+      "use_when": "Synthesized geopolitical briefings tied to a pair and date range. Not for raw rates.",
+      "homepage": "https://docs.perplexity.ai/"
+    },
+    {
+      "id": "pandas-ta",
+      "name": "pandas-ta",
+      "category": "indicators",
+      "type": "pip",
+      "install": "pip install pandas-ta",
+      "use_when": "Default technical indicators — MAs, RSI, MACD, Bollinger, ATR, pivots. Pure Python, no C build.",
+      "homepage": "https://github.com/twopirllc/pandas-ta"
+    },
+    {
+      "id": "ta-lib",
+      "name": "TA-Lib",
+      "category": "indicators",
+      "type": "pip+system",
+      "install": "apt install libta-lib0 libta-lib-dev && pip install TA-Lib",
+      "use_when": "Large indicator batches where pandas-ta is too slow. Otherwise prefer pandas-ta.",
+      "homepage": "https://github.com/TA-Lib/ta-lib-python"
+    },
+    {
+      "id": "tuneta",
+      "name": "TuneTA",
+      "category": "indicators",
+      "type": "pip",
+      "install": "pip install tuneta",
+      "use_when": "Auto-tune indicator parameters per FX pair against a target signal.",
+      "homepage": "https://github.com/jmrichardson/tuneta"
+    },
+    {
+      "id": "statsmodels",
+      "name": "statsmodels",
+      "category": "cointegration",
+      "type": "pip",
+      "install": "pip install statsmodels",
+      "use_when": "ADF stationarity tests, Engle-Granger + Johansen cointegration, VAR, ARIMA. Essential for FX pair analysis.",
+      "homepage": "https://www.statsmodels.org/"
+    },
+    {
+      "id": "arch",
+      "name": "arch",
+      "category": "vol",
+      "type": "pip",
+      "install": "pip install arch",
+      "use_when": "GARCH/EGARCH/realised-vol modeling. FX vol clusters — use this for vol forecasts.",
+      "homepage": "https://github.com/bashtage/arch"
+    },
+    {
+      "id": "py-vollib",
+      "name": "py_vollib",
+      "category": "derivatives",
+      "type": "pip",
+      "install": "pip install py_vollib",
+      "use_when": "Black-Scholes greeks + implied vol for FX options.",
+      "homepage": "https://github.com/vollib/py_vollib"
+    },
+    {
+      "id": "statsforecast",
+      "name": "Nixtla statsforecast",
+      "category": "forecast",
+      "type": "pip",
+      "install": "pip install statsforecast",
+      "use_when": "Fast local classical forecasts (AutoARIMA, ETS, Theta). No API key. Default forecaster.",
+      "homepage": "https://github.com/Nixtla/statsforecast"
+    },
+    {
+      "id": "neuralforecast",
+      "name": "Nixtla neuralforecast",
+      "category": "forecast",
+      "type": "pip",
+      "install": "pip install neuralforecast",
+      "use_when": "Neural forecasts (NHITS, NBEATS, TFT) when classical is insufficient.",
+      "homepage": "https://github.com/Nixtla/neuralforecast"
+    },
+    {
+      "id": "timegpt",
+      "name": "Nixtla TimeGPT client",
+      "category": "forecast",
+      "type": "pip",
+      "install": "pip install nixtla",
+      "auth": "api-key",
+      "env_var": "NIXTLA_API_KEY",
+      "use_when": "Zero-shot forecasting baseline. Good for quick 'what does a foundation model expect' sanity check.",
+      "homepage": "https://github.com/Nixtla/nixtla"
+    },
+    {
+      "id": "rateslib",
+      "name": "rateslib",
+      "category": "derivatives",
+      "type": "pip",
+      "install": "pip install rateslib",
+      "use_when": "FX forwards, cross-currency swaps, curve construction, carry analysis.",
+      "homepage": "https://rateslib.com/"
+    },
+    {
+      "id": "financepy",
+      "name": "FinancePy",
+      "category": "derivatives",
+      "type": "pip",
+      "install": "pip install financepy",
+      "use_when": "Exotic FX options, barrier/asian/digital pricing.",
+      "homepage": "https://github.com/domokane/FinancePy"
+    },
+    {
+      "id": "quantstats",
+      "name": "quantstats",
+      "category": "quant-metrics",
+      "type": "pip",
+      "install": "pip install quantstats",
+      "use_when": "Default metrics + tearsheet HTML. Feed FX log-returns: Sharpe, Sortino, Calmar, max DD, VaR, CVaR, rolling vol, Monte Carlo.",
+      "homepage": "https://github.com/ranaroussi/quantstats"
+    },
+    {
+      "id": "vectorbt",
+      "name": "vectorbt",
+      "category": "backtest",
+      "type": "pip",
+      "install": "pip install vectorbt",
+      "use_when": "Vectorised backtest grids — try thousands of indicator-param combos per pair fast.",
+      "homepage": "https://github.com/polakowo/vectorbt"
+    },
+    {
+      "id": "qlib",
+      "name": "microsoft/qlib",
+      "category": "backtest",
+      "type": "pip",
+      "install": "pip install pyqlib",
+      "use_when": "Serious backtest with IC/Sharpe + factor mining. Heavy — only when simple backtest is insufficient.",
+      "homepage": "https://github.com/microsoft/qlib"
+    },
+    {
+      "id": "matplotlib",
+      "name": "matplotlib",
+      "category": "visualization",
+      "type": "pip",
+      "install": "pip install matplotlib",
+      "use_when": "Static charts for PDF reports."
+    },
+    {
+      "id": "plotly",
+      "name": "plotly",
+      "category": "visualization",
+      "type": "pip",
+      "install": "pip install plotly",
+      "use_when": "Interactive HTML charts for exploratory analysis."
+    },
+    {
+      "id": "mplfinance",
+      "name": "mplfinance",
+      "category": "visualization",
+      "type": "pip",
+      "install": "pip install mplfinance",
+      "use_when": "Candlestick + volume charts, clean defaults."
+    },
+    {
+      "id": "typst",
+      "name": "Typst",
+      "category": "reporting",
+      "type": "cli",
+      "install": "cargo install --locked typst-cli",
+      "use_when": "Final PDF report generation. Preferred over LaTeX for speed and ergonomics.",
+      "homepage": "https://typst.app/"
+    },
+    {
+      "id": "openbb",
+      "name": "OpenBB Platform",
+      "category": "data-spot",
+      "type": "pip+mcp",
+      "install": "pip install openbb  (base) or pip install 'openbb[all]' (heavy)",
+      "use_when": "Unified access to many providers (Yahoo, FMP, Polygon, FRED) behind one API. Optional — use when multi-provider fusion matters more than lean deps.",
+      "homepage": "https://openbb.co/"
+    },
+    {
+      "id": "financetoolkit",
+      "name": "JerBouma/FinanceToolkit",
+      "category": "quant-metrics",
+      "type": "pip",
+      "install": "pip install financetoolkit",
+      "use_when": "Quick ratio/indicator computations over a ticker — supplements quantstats when dimensional breadth matters.",
+      "homepage": "https://github.com/JerBouma/FinanceToolkit"
+    },
+    {
+      "id": "clarity-planning-pattern",
+      "name": "Planning-with-Files (ClarityFinance)",
+      "category": "architecture-reference",
+      "type": "pattern",
+      "use_when": "Multi-phase analyses — use task_plan.md / findings.md / progress.md in context/from-agent/ for long-running workflows.",
+      "homepage": "https://github.com/cooragent/ClarityFinance"
+    },
+    {
+      "id": "finrobot-roles",
+      "name": "Role-decomposition (FinRobot)",
+      "category": "architecture-reference",
+      "type": "pattern",
+      "use_when": "Split analysis into specialist sub-agents: technical, macro, geopol, flows. Synthesise in final report.",
+      "homepage": "https://github.com/AI4Finance-Foundation/FinRobot"
+    },
+    {
+      "id": "rkiding-signal-tracker",
+      "name": "Signal-tracker (RKiding Awesome-finance-skills)",
+      "category": "architecture-reference",
+      "type": "pattern",
+      "use_when": "Record each signal with strengthen / weaken / falsify conditions. Update as new data arrives.",
+      "homepage": "https://github.com/RKiding/Awesome-finance-skills"
+    },
+    {
+      "id": "langalpha-ptc",
+      "name": "Programmatic Tool Calling (LangAlpha)",
+      "category": "architecture-reference",
+      "type": "pattern",
+      "use_when": "For quant work: write Python in-session that processes data locally and returns only summary — avoid dumping raw series into context.",
+      "homepage": "https://github.com/ginlix-ai/LangAlpha"
+    }
+  ]
+}
