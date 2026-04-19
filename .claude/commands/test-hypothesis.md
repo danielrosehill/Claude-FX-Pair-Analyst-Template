@@ -33,3 +33,15 @@ Verdict first, then test, then effect size, then robustness. Path to the updated
 - **No p-hacking.** Pick the test before looking at the result. Don't retry until you get significance.
 - **Flag fragile results.** If significance depends on window choice, say so.
 - **Cite the grounding.** Reference which section of the profile motivated the test.
+
+## Causal claims (EconML use)
+
+If the hypothesis is genuinely causal (not correlational) and you invoke `econml` from the toolkit, you **must**:
+
+1. Name the confounder set explicitly before fitting. "Control variables: W = [DXY, VIX-proxy, rate_diff_2Y]."
+2. Check overlap/positivity — treatment should have non-trivial variation across the confounder support. If not, abort.
+3. Run at least one refutation test (placebo treatment, random common cause, subset robustness). EconML's DoWhy integration or manual re-fit on a permuted treatment.
+4. Report the CATE with confidence interval width — a point estimate without CI is not a result.
+5. State the assumption that makes the claim causal (unconfoundedness / positivity / no-interference) and whether you believe it holds in this FX context. If you don't believe it, say so and downgrade the claim to "partial effect conditional on observables".
+
+Without these steps, downgrade the verdict language from "causes" to "is associated with after controlling for". Do not launder an associative finding as causal.

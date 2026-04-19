@@ -9,6 +9,7 @@
     "data-news-geopol": "News and geopolitical context",
     "indicators": "Technical indicators",
     "cointegration": "Pair trading / cointegration / stationarity",
+    "causal": "Causal inference — treatment effects, partial effects after controlling confounders. Optional, expert use.",
     "vol": "Volatility modeling",
     "forecast": "Time-series forecasting",
     "derivatives": "FX options / forwards / swaps pricing",
@@ -198,6 +199,18 @@
       "install": "pip install py_vollib",
       "use_when": "Black-Scholes greeks + implied vol for FX options.",
       "homepage": "https://github.com/vollib/py_vollib"
+    },
+    {
+      "id": "econml",
+      "name": "Microsoft EconML (py-why)",
+      "category": "causal",
+      "type": "pip",
+      "install": "pip install econml",
+      "auth": "none",
+      "coverage": "Double ML, orthogonal random forests, CausalForestDML, DynamicDML (panel), CATE estimation. Sklearn-shaped API: fit(Y, T, X, W).",
+      "use_when": "ONLY for explicit causal questions where correlation isn't enough — e.g. 'partial effect of rate differential on EURUSD returns after controlling for DXY and VIX', 'CATE of a Fed surprise across vol regimes'. Not for predictive work (use statsforecast/quantstats). Requires: named confounder set, overlap diagnostics, refutation/placebo tests. Every output is a causal claim conditional on untestable assumptions — surface caveats in reports.",
+      "epistemic_notes": "FX has almost no true natural experiments. IV estimators rarely applicable. CATE outputs without placebo tests are a footgun — the template's /test-hypothesis command must enforce refutation steps if this tool is invoked.",
+      "homepage": "https://github.com/py-why/EconML"
     },
     {
       "id": "statsforecast",
